@@ -10,6 +10,8 @@ class Webdav extends Device
 {
 
     const METHOD_MKCOL = 'MKCOL';
+    const METHOD_PROPFIND = 'PROPFIND';
+    const METHOD_MOVE = 'MOVE';
 
     /**
      * @var string
@@ -100,6 +102,47 @@ class Webdav extends Device
      */
     public function upload(string $source, string $path, int $chunk = 1, int $chunks = 1, array &$metadata = []): int
     {
+    }
+
+        /**
+     * Move file from given source to given path, Return true on success and false on failure.
+     *
+     * @see http://php.net/manual/en/function.move-uploaded-file.php
+     *
+     * @param string $source
+     * @param string $target
+     * 
+     * @throw \Exception
+     *
+     * @return bool
+     */
+    public function move(string $source, string $target): bool
+    {
+        // Basic setup
+        $curl = \curl_init();
+        \curl_setopt($curl, CURLOPT_USERAGENT, 'utopia-php/storage');
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, METHOD_MOVE); 
+        \curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
+        \curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+        // Set Path
+        $fullpath = $this->url.$source;
+        \curl_setopt($curl, CURLOPT_URL, $fullpath);
+        \curl_setopt($curl, CURLOPT_HTTPHEADER, array('Destination: ' . $this->url.$target)); 
+        $result = \curl_exec($curl);
+
+        if (!$result) {
+            throw new Exception(\curl_error($curl));
+        }
+        
+        $response->code = \curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($response->code >= 400) {
+            throw new Exception($response->body, $response->code);
+        }
+
+        \curl_close($curl);
+
+        return true;
     }
 
     /**

@@ -106,7 +106,7 @@ abstract class Device
     /**
      * Move file from given source to given path, return true on success and false on failure.
      *
-     * @see http://php.net/manual/en/function.filesize.php
+     * @see http://php.net/manual/en/function.move-uploaded-file.php
      *
      * @param string $source
      * @param string $target

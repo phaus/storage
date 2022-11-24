@@ -9,9 +9,12 @@ use Utopia\Storage\Storage;
 class Webdav extends Device
 {
 
-    const METHOD_MKCOL = 'MKCOL';
     const METHOD_PROPFIND = 'PROPFIND';
+    const METHOD_MKCOL = 'MKCOL';
+    const METHOD_DELETE = 'DELETE';
     const METHOD_MOVE = 'MOVE';
+    const METHOD_PUT = 'PUT';
+    const METHOD_GET = 'GET';
 
     /**
      * @var string
